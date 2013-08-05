@@ -144,7 +144,12 @@ var app = (function (){
 
         script.onload = function (){
             script.onload = null;
-            script.remove();
+            if (script.remove){
+                script.remove();
+            }
+            else{
+                script.parentNode.remove(script);
+            }
         };
 
         ((document.getElementsByTagName('script')[0] && document.getElementsByTagName('script')[0].parentNode)  ||
