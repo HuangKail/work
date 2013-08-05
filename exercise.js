@@ -148,7 +148,7 @@ var app = (function (){
                 script.remove();
             }
             else{
-                script.parentNode.remove(script);
+                script.parentNode.removeChild(script);
             }
         };
 
