@@ -1,3 +1,9 @@
+/*!
+    this is the exercise for wandoujia.
+    @Kail
+    @https://github.com/HuangKail/work/blob/master/exercise.js
+    @works on mordern browsers only
+ */
 var app = (function (){
     var requestUrl = 'http://photo-sync.herokuapp.com/photos',
         callbackParamStr = 'callback=app.photosLoaded',
