@@ -6,7 +6,7 @@
  */
 var app = (function (){
     var requestUrl = 'http://photo-sync.herokuapp.com/photos',
-        callbackParamStr = 'callback=app.photosLoaded',
+        callbackParamStr,
         isLoading = false,
         photoCollectionModels = {
         };
@@ -207,13 +207,13 @@ var app = (function (){
         loadData: function (datas) {
             var i = 0, data,
                 addedItems = [],
-                id;
+                id, len = this.datas.length;
 
             while(data = datas[i]){
                 id = data.id;
                 if (!this.loadedDatas[data.id]){
-                    addedItems.push(i);
                     this.loadedDatas[id] = 1;
+                    addedItems.push(i + len);
                     this.datas.push(data);
                 }
                 i++;
@@ -232,7 +232,7 @@ var app = (function (){
         var itemsStr = '',
             that = this;
         this.tpl = '<div class="mod-photos-coll"><div class="title"><h3 class="date">#{name}</div></h3><div class="ctn"></div></div>';
-        this.itemTpl = '<div class="photo-box"><img src="#{src}" class="img-notready" data-idx="#{idx}"/></div>';
+        this.itemTpl = '<div class="photo-box"><img src="#{src}" class="photo img-notready" data-idx="#{idx}"/></div>';
         this.model = model;
         this.el = document.createElement('div');
         this.el.innerHTML = stringFormat(this.tpl, {
@@ -248,6 +248,9 @@ var app = (function (){
                     src: data.imageURL,
                     idx: idx
                 });
+                if ((idx + 1) % 5 == 0) {
+                    itemsStr = '<div>' + itemsStr + '</div>'
+                }
             }
             that.el.querySelector('.ctn').innerHTML += itemsStr;
             Array.prototype.forEach.call(that.el.querySelectorAll('.img-notready'), that.resizeImg);
@@ -274,8 +277,10 @@ var app = (function (){
         }
     };
 
-    function run () {
+    function run (opt) {
         // var photoUrl = 'http://photo-sync.herokuapp.com/photos'
+        requestUrl = opt.requestUrl || requestUrl;
+        callbackParamStr = 'callback=' + (opt.globalVarAppName || 'app') + '.photosLoaded';
         loadPhotos();
     }
 
@@ -321,11 +326,13 @@ var app = (function (){
     }
 
     return {
-        group: group,
-        resize: resizeImg,
-        loadPhotos: loadPhotos,
+        // group: group,
+        // resize: resizeImg,
+        // loadPhotos: loadPhotos,
         photosLoaded: photosLoadedHandler,
         run: run
     }
 })();
-app.run();
+app.run({
+    globalVarAppName: 'app'
+});
