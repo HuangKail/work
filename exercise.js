@@ -321,11 +321,12 @@ var app = (function (){
         },
         act: function () {
             var doc = document,
-                screenHeight = doc.documentElement.scrollHeight || doc.body.scrollHeight,
+                scrollHeight = doc.documentElement.scrollHeight || doc.body.scrollHeight,
+                screenHeight = doc.documentElement.clientHeight || doc.body.clientHeight,
                 scrollTop = doc.documentElement.scrollTop || doc.body.scrollTop;
 
             scroller.timer = null;
-            if (scroller.previousLoadScrollTop > scrollTop || screenHeight - scrollTop > screenHeight / 5) {
+            if (scroller.previousLoadScrollTop > scrollTop || scrollHeight - screenHeight - scrollTop > Math.min(screenHeight / 5, 500)) {
                 return ;
             }
             else{
