@@ -8,6 +8,7 @@ var app = (function (){
     var requestUrl = 'http://photo-sync.herokuapp.com/photos',
         callbackParamStr,
         isLoading = false,
+        ctnSel = '#ctn',
         photoCollectionModels = {
         };
     //
@@ -191,7 +192,7 @@ var app = (function (){
         if (!photoCollectionModels[name]){
             photoCollectionModels[name] = new PhotoCollectionModel(name);
             photoCollCtr = new PhotoCollectionController(photoCollectionModels[name]);
-            photoCollCtr.appendTo(document.querySelector('#ctn'));
+            photoCollCtr.appendTo(document.querySelector(ctnSel));
         }
         photoCollectionModel = photoCollectionModels[name];
         photoCollectionModel.loadData(groupedPhotos);
@@ -288,6 +289,7 @@ var app = (function (){
         // var photoUrl = 'http://photo-sync.herokuapp.com/photos'
         requestUrl = opt.requestUrl || requestUrl;
         callbackParamStr = 'callback=' + (opt.globalVarAppName || 'app') + '.photosLoaded';
+        ctnSel = opt.ctnSel || ctnSel;
         loadPhotos();
     }
 
