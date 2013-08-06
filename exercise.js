@@ -229,9 +229,8 @@ var app = (function (){
     };
 
     function PhotoCollectionController (model) {
-        var itemsStr = '',
-            that = this;
-        this.tpl = '<div class="mod-photos-coll"><div class="title"><h3 class="date">#{name}</div></h3><div class="ctn"></div></div>';
+        var that = this;
+        this.tpl = '<div class="mod-photos-coll"><div class="title"><h3 class="date">#{name}</div></h3><div class="ctn"><div class="line"></div></div></div>';
         this.itemTpl = '<div class="photo-box"><img src="#{src}" class="photo img-notready" data-idx="#{idx}"/></div>';
         this.model = model;
         this.el = document.createElement('div');
@@ -241,7 +240,8 @@ var app = (function (){
 
         this.renderNewItems = function (evt) {
             var datas = evt.data, i = 0,
-                idx, data;
+                idx, data, lineNum,
+                itemsStr = '';
             while (typeof (idx = datas[i++]) == 'number') {
                 data = that.model.datas[idx];
                 itemsStr += stringFormat(that.itemTpl, {
@@ -249,10 +249,17 @@ var app = (function (){
                     idx: idx
                 });
                 if ((idx + 1) % 5 == 0) {
-                    itemsStr = '<div>' + itemsStr + '</div>'
+                    lineNum = Math.floor(idx / 5);
+                    that.el.querySelector('.ctn').querySelectorAll('.line')[lineNum].innerHTML += itemsStr;
+                    itemsStr = '';
+                    that.el.querySelector('.ctn').innerHTML += '<div class="line"></div>'
                 }
             }
-            that.el.querySelector('.ctn').innerHTML += itemsStr;
+            if (itemsStr) {
+                idx = datas[datas.length - 1];
+                lineNum = Math.floor(idx / 5);
+                that.el.querySelector('.ctn').querySelectorAll('.line')[lineNum].innerHTML += itemsStr;
+            }
             Array.prototype.forEach.call(that.el.querySelectorAll('.img-notready'), that.resizeImg);
         };
 
@@ -286,7 +293,7 @@ var app = (function (){
 
     var scroller = {
         timer: null,
-        optimizedType: 'throttle',
+        optimizedType: 'debounce',
         duration: 300,
         previousLoadScrollTop: 0,
         start: function () {
