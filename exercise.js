@@ -312,7 +312,7 @@ var app = (function (){
             }
         },
         debounce: function () {
-            if (!scroller.timer){
+            if (scroller.timer) {
                 clearTimeout(scroller.timer);
             }
             scroller.timer = setTimeout(scroller.act, scroller.duration);
